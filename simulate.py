@@ -16,27 +16,33 @@ class Simulate(object):
 
     def __init__(self, flags):
         self.flags = flags
-        self.url_w = "http://zx081325.xyz:82/hex/white_weights.ckpt"
-        self.url_b = "http://zx081325.xyz:82/hex/black_weights.ckpt"
+        self.url_v = "http://zx081325.xyz:81/zx/model_version.txt"
+        self.url_w = "http://zx081325.xyz:81/zx/white_weights.ckpt"
+        self.url_b = "http://zx081325.xyz:81/zx/black_weights.ckpt"
         self.model_path_w = 'model/white_weights.ckpt'
         self.model_path_b = 'model/black_weights.ckpt'
         self.model = Model(device='cpu', board_size=flags.board_size)
+        self.version = 0
 
     # 从云盘下载模型
     def download_pkl(self):
         try:
-            res = requests.get(self.url_w, stream=True)
+            res = requests.get(self.url_v).content
+            if int(res) <= self.version:
+                return
+            print(int(res))
+            self.version = int(res)
+            start_time = time.time()
+            res = requests.get(self.url_w)
             with open(self.model_path_w, "wb") as f:
-                for chunk in res.iter_content(chunk_size=1024):
-                    if chunk:
-                        f.write(chunk)
-            print("white模型下载成功")
-            res = requests.get(self.url_b, stream=True)
+                f.write(res.content)
+            print("white模型下载成功, 下载用时:{}".format(time.time() - start_time))
+            start_time = time.time()
+            res = requests.get(self.url_b)
             with open(self.model_path_b, "wb") as f:
-                for chunk in res.iter_content(chunk_size=1024):
-                    if chunk:
-                        f.write(chunk)
-            print("black模型下载成功")
+                f.write(res.content)
+            print("black模型下载成功, 下载用时:{}".format(time.time() - start_time))
+            self.load_model()
         except Exception as e:
             print("下载模型失败:", repr(e))
 
@@ -111,15 +117,14 @@ class Simulate(object):
                     # 发送batch
                     data = {"file": batch}
                     requests.post(url='http://zx081325.xyz:83/{}_batch'.format(position), files=data)
-                    print(position, "batch发送成功")
-
                     end_time = time.time()
-                    print("time", end_time - start_time)
+                    print(position, "batch发送成功", "速度: {} frames/s".format(3200 / (end_time - start_time)))
+                    start_time = time.time()
                     if end_time - start_time > 120 and position == "white":
                         # 更新模型
                         self.download_pkl()
                         self.load_model()
-                        start_time = time.time()
+
 
         threads = []
         locks = {}
@@ -140,7 +145,6 @@ if __name__ == "__main__":
     flags = parser.parse_args(['--actor_device_cpu'])
     simulate = Simulate(flags)
     simulate.download_pkl()
-    simulate.load_model()
     simulate.simulate()
 
 

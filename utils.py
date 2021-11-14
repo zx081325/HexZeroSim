@@ -129,7 +129,6 @@ def act(i, device, free_queue, full_queue, model, buffers, flags):
                 while size[p] > T:
                     # free_queue出队
                     index = free_queue[p].get()
-                    print("index", index)
                     if index is None:
                         break
                     for t in range(T):

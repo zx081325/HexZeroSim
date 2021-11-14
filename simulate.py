@@ -115,7 +115,7 @@ class Simulate(object):
 
                     end_time = time.time()
                     print("time", end_time - start_time)
-                    if end_time - start_time > 60 and position == "white":
+                    if end_time - start_time > 120 and position == "white":
                         # 更新模型
                         self.download_pkl()
                         self.load_model()

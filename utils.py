@@ -35,7 +35,6 @@ def get_batch(free_queue,
     with lock:
         # full_queue 出队
         indices = [full_queue.get() for _ in range(flags.batch_size)]
-        print(indices)
     batch = {
         key: torch.stack([buffers[key][m] for m in indices], dim=1)
         for key in buffers

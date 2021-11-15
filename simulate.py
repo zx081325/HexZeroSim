@@ -1,5 +1,3 @@
-import time
-
 import requests
 import threading
 import torch
@@ -30,7 +28,7 @@ class Simulate(object):
             res = requests.get(self.url_v).content
             if int(res) <= self.version:
                 return
-            print(int(res))
+            print("version:", int(res))
             self.version = int(res)
             start_time = time.time()
             res = requests.get(self.url_w)
@@ -120,11 +118,8 @@ class Simulate(object):
                     end_time = time.time()
                     print(position, "batch发送成功", "速度: {} frames/s".format(3200 / (end_time - start_time)))
                     start_time = time.time()
-                    if end_time - start_time > 120 and position == "white":
-                        # 更新模型
-                        self.download_pkl()
-                        self.load_model()
-
+                    # 更新模型
+                    self.download_pkl()
 
         threads = []
         locks = {}

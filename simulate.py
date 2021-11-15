@@ -32,12 +32,12 @@ class Simulate(object):
             self.version = int(res)
             start_time = time.time()
             res = requests.get(self.url_w)
-            with open(self.model_path_w, "wb") as f:
+            with open(self.model_path_w, "wb+") as f:
                 f.write(res.content)
             print("white模型下载成功, 下载用时:{}".format(time.time() - start_time))
             start_time = time.time()
             res = requests.get(self.url_b)
-            with open(self.model_path_b, "wb") as f:
+            with open(self.model_path_b, "wb+") as f:
                 f.write(res.content)
             print("black模型下载成功, 下载用时:{}".format(time.time() - start_time))
             self.load_model()

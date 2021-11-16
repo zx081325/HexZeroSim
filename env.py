@@ -6,7 +6,9 @@ class Env:
     """
     Doudizhu multi-agent wrapper
     """
-    def __init__(self, chess_num, board=[]):
+    def __init__(self, chess_num, board=None):
+        if board is None:
+            board = []
         self.chess_num = chess_num
         self._env = GameEnv(self.chess_num)
         self._env.board = board

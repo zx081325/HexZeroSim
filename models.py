@@ -12,12 +12,12 @@ from torch import nn
 class HexSize11Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.dense1 = nn.Linear(363, 512)
-        self.dense2 = nn.Linear(512, 512)
-        self.dense3 = nn.Linear(512, 512)
-        self.dense4 = nn.Linear(512, 512)
-        self.dense5 = nn.Linear(512, 512)
-        self.dense6 = nn.Linear(512, 1)
+        self.dense1 = nn.Linear(363, 360)
+        self.dense2 = nn.Linear(360, 256)
+        self.dense3 = nn.Linear(256, 128)
+        self.dense4 = nn.Linear(128, 64)
+        self.dense5 = nn.Linear(64, 32)
+        self.dense6 = nn.Linear(32, 1)
 
     def forward(self, x, return_value=False, flags=None):
         x = self.dense1(x)
@@ -44,12 +44,12 @@ class HexSize11Model(nn.Module):
 class HexSize7Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.dense1 = nn.Linear(147, 256)
-        self.dense2 = nn.Linear(256, 256)
-        self.dense3 = nn.Linear(256, 256)
-        self.dense4 = nn.Linear(256, 256)
-        self.dense5 = nn.Linear(256, 256)
-        self.dense6 = nn.Linear(256, 1)
+        self.dense1 = nn.Linear(147, 128)
+        self.dense2 = nn.Linear(128, 64)
+        self.dense3 = nn.Linear(64, 32)
+        self.dense4 = nn.Linear(32, 16)
+        self.dense5 = nn.Linear(16, 8)
+        self.dense6 = nn.Linear(8, 1)
 
     def forward(self, x, return_value=False, flags=None):
         x = self.dense1(x)
